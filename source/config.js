@@ -11,7 +11,8 @@ mongoose.Promise = Promise;
 const Config = {
     MongoUrl :  process.env.MONGODB_URI || "mongodb://localhost:27017/Satori",
     MemCachedUrl : process.env.MEMCACHED_URI || 'localhost:11211',
-    port : 3000
+    port : 3000,
+    SessionDuration:2592000
 };
 
 mongoose.connect(Config.MongoUrl, function (err) {
@@ -21,7 +22,7 @@ mongoose.connect(Config.MongoUrl, function (err) {
 });
 
 global.memCached = new MemCached(Config.MemCachedUrl, {
-    retries : 10, maxExpiration : maxConcurrentSessionDuration, retry : 10000,
+    retries : 10, maxExpiration : Config.SessionDuration, retry : 10000,
     remove : true, timeout : 5000, reconnect : 30000
 });
 

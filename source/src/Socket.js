@@ -5,23 +5,37 @@ const Config = require('../config');
 let io = require('socket.io');
 const User = require('../model/user');
 
-io = io.listen(Config.port);
+global.Clients = {};
 
-io.on('connection', function (socket) {
-    socket.on('verify', function (data) {
-        User.getUser(data)
-            .then(function (user) {
-                if (!user)
+module.exports = function (app) {
+    io = io.listen(app);
+    
+    io.on('connection', function (socket) {
+        console.log('Client Connected');
+        socket.on('verify', function (data) {
+            User.getUser(data)
+                .then(function (user) {
+                    if (!user)
+                        socket.disconnect();
+                    else {
+                        socket.Number = data;
+                        setUp(socket);
+                    }
+                })
+                .catch(function (e) {
                     socket.disconnect();
-            })
-            .catch(function (e) {
-               socket.disconnect();
-            })
-            .then(setUp);
+                });
+        });
     });
-});
-
-
-const setUp = function (socket) {
-    //Events Here
+    
+    
+    const setUp = function (socket) {
+        Clients[socket.Number] = socket;
+        
+        socket.on('disconnect', function () {
+            delete Clients[socket.Number];
+        });
+        //Write Events Here
+        
+    };
 };

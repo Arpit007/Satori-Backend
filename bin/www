@@ -28,6 +28,7 @@ global.server = server;
  */
 
 server.listen(port);
+const SocketIO = require('../source/src/Socket')(server);
 server.on('error', onError);
 server.on('listening', onListening);
 

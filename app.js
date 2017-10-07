@@ -8,6 +8,7 @@ const helmet = require('helmet');
 
 const index = require('./source/routes/index');
 const users = require('./source/routes/users');
+const resource = require('./source/routes/resource');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/user', users);
+app.use('/res', resource);
 
 app.use(function (req, res, next) {
     const err = new Error('Not Found');

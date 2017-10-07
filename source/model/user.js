@@ -5,8 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    Number : { type : String, required : true, index : true },
-    Contacts : [ { type : String } ]
+    Number : { type : String, required : true, index : true }
 });
 
 UserSchema.methods.LogOut = function () {
@@ -20,11 +19,10 @@ UserSchema.methods.LogOut = function () {
         });
 };
 
-UserSchema.methods.GetContacts = function () {
+UserSchema.methods.GetContacts = function (UserContacts = []) {
     let Contacts = [];
     let promise = Promise.resolve("");
-    const user = this;
-    user.Contacts.forEach(function (contact) {
+    UserContacts.forEach(function (contact) {
         promise = promise.then(function () {
             return User.findOne({ Number : contact })
                 .then(function (tempUser) {
@@ -39,33 +37,6 @@ UserSchema.methods.GetContacts = function () {
         console.log(e);
         throw User.ErrorCodes.Failed;
     });
-};
-
-UserSchema.methods.UpdateContacts = function (AddContacts = [], RemoveContacts = []) {
-    const user = this;
-    try {
-        RemoveContacts.forEach(function (contact) {
-            let index = user.Contacts.indexOf(contact);
-            if (index !== -1)
-                user.Contacts.splice(index, 1);
-        });
-        AddContacts.forEach(function (contact) {
-            if (user.Contacts.indexOf(contact) === -1)
-                user.Contacts.push(contact);
-        });
-    }
-    catch (e) {
-        throw User.ErrorCodes.Failed;
-    }
-    
-    return user.save()
-        .then(function () {
-            return user.GetContacts();
-        })
-        .catch(function (e) {
-            console.log(e);
-            throw User.ErrorCodes.Failed;
-        });
 };
 
 const User = mongoose.model('User', UserSchema);

@@ -4,7 +4,8 @@
 
 const Codes = {
     Failed : 400,
-    Success : 200
+    Success : 200,
+    DoesNotExists: 101
 };
 
 global.Codes = Codes;
