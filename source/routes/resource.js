@@ -20,7 +20,7 @@ router.get('/all', function (req, res) {
     }
 });
 
-router.post('/id', function (req, res) {
+router.post('/avail', function (req, res) {
     if (typeof req.body.Ids === 'string')
         req.body.Ids = JSON.parse(req.body.Ids);
     try {

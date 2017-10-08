@@ -30,10 +30,16 @@ module.exports = function (app) {
     
     
     const setUp = function (socket) {
-        Clients[socket.Number] = socket;
+        Clients[ socket.Number ] = socket;
         
         socket.on('disconnect', function () {
-            delete Clients[socket.Number];
+            delete Clients[ socket.Number ];
+        });
+        
+        socket.on('peerStatus', function (data) {
+            if (Clients[ data ])
+                socket.emit('peerStatus', JSON.stringify({ peer : data, status : "Online" }));
+            else socket.emit('peerStatus', JSON.stringify({ peer : data, status : "Offline" }));
         });
         //Write Events Here
         

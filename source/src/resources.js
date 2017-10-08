@@ -8,8 +8,10 @@ const listResource = (dir, refPath = '/images/art', List = {}) => {
     fs.readdirSync(dir).forEach(folder => {
         let array = [];
         let tempPath = refPath + "/" + folder + "/";
-        fs.readdirSync(path.join(dir, folder)).forEach(file => {
-            array.push(tempPath + file);
+        let fetchPath = path.join(dir,  folder);
+        fs.readdirSync(fetchPath).forEach(file => {
+            if (!fs.lstatSync(path.join(fetchPath,file)).isDirectory())
+                array.push(tempPath + file);
         });
         List[ folder ] = array;
     });
@@ -19,7 +21,6 @@ const listResource = (dir, refPath = '/images/art', List = {}) => {
 const listAvailable = function (dir, Files = []) {
     const Reply = {};
     Files.forEach(file => {
-        console.log(path.join(dir, file));
         Reply[ file ] = fs.existsSync(path.join(dir, file));
     });
     return Reply;
